@@ -1,9 +1,6 @@
 import {View, Button, Text, StyleSheet} from "react-native";
 
 const Parametres = () => {
-
-
-
     return(
         <View>
 

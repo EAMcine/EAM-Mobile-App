@@ -1,72 +1,78 @@
 import React, { useState } from "react";
 import { View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import axios from 'axios';
 
-const Register = ({ navigation }) => {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [favoriteMovie, setFavoriteMovie] = useState("");
-    const [rating, setRating] = useState("");
-    const [description, setDescription] = useState("");
-    const [author, setAuthor] = useState("");
+const SendFilms = ({ navigation }) => {
+    const [titre, setTitre] = useState('');
+    const [auteur, setAuteur] = useState('');
+    const [genre, setGenre] = useState('');
+    const [acteurs, setActeurs] = useState('');
+    const [duree, setDuree] = useState('');
+    const [imageLien, setImageLien] = useState('');
+    const [dateSortie, setDateSortie] = useState(''); // Nouveau champ dateSortie
 
-    const registerUser = () => {
-        // Add your registration logic here
-    };
+    const submitFilm = async () => {
+        try {
+            const dureeValue = isNaN(duree) ? 0 : parseInt(duree, 10);
 
-    const submitFavoriteMovie = async () => {
-        // Here, replace with your actual code to send the movie to your database.
-        // For instance, if you are using a REST API, it may look something like this:
 
-        // const response = await fetch("your_api_endpoint", {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         email: email,
-        //         favorite_movie: favoriteMovie
-        //     })
-        // });
-        //
-        // const data = await response.json();
-        //
-        // console.log(data);
+            const response = await axios.post("http://localhost:3000/sendFilm", {
+                titre: titre,
+                auteur: auteur,
+                genre: genre,
+                acteurs: acteurs,
+                duree: dureeValue, // Utiliser la valeur convertie
+                img_link: imageLien,
+                date_sortie: dateSortie
+            });
+
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', padding: 16 }}>
             <TextInput
-                label="Favorite Movie"
-                value={favoriteMovie}
-                onChangeText={text => setFavoriteMovie(text)}
-                style={{ marginBottom: 16 }}
+                label="Titre"
+                value={titre}
+                onChangeText={text => setTitre(text)}
             />
             <TextInput
-                label="Rating"
-                value={rating}
-                onChangeText={text => setRating(text)}
-                keyboardType='numeric'
-                style={{ marginBottom: 16 }}
+                label="Auteur"
+                value={auteur}
+                onChangeText={text => setAuteur(text)}
             />
             <TextInput
-                label="Description"
-                value={description}
-                onChangeText={text => setDescription(text)}
-                style={{ marginBottom: 16 }}
+                label="Genre"
+                value={genre}
+                onChangeText={text => setGenre(text)}
             />
             <TextInput
-                label="Author"
-                value={author}
-                onChangeText={text => setAuthor(text)}
-                style={{ marginBottom: 16 }}
+                label="Acteurs"
+                value={acteurs}
+                onChangeText={text => setActeurs(text)}
             />
-            <Button mode="contained" onPress={submitFavoriteMovie} style={{ marginTop: 16 }}>
-                Submit Favorite Movie
-            </Button>
+            <TextInput
+                label="Durée"
+                value={duree}
+                onChangeText={text => setDuree(text)}
+            />
+            <TextInput
+                label="Date de sortie"
+                value={dateSortie}
+                onChangeText={text => setDateSortie(text)}
+            />
+            <TextInput
+                label="Image Lien"
+                value={imageLien}
+                onChangeText={text => setImageLien(text)}
+            />
+            <Button onPress={submitFilm}>Envoyer</Button>
         </View>
-    )
-}
+    );
+};
 
-export default Register;
+export default SendFilms;
